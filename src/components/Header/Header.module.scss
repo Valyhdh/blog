@@ -1,0 +1,112 @@
+.header {
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  height: 80px;
+  min-width: 360px;
+  max-width: 1440px;
+  align-items: center;
+
+  &__title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    margin-left: 20px;
+    color: #000000d9;
+    text-decoration: none;
+    transition: all 0.5s;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  .header-authentication {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+
+    &__sign-in {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      border: none;
+
+      cursor: pointer;
+      margin-right: 30px;
+      text-decoration: none;
+      color: #000000d9;
+    }
+
+    &__sign-up,
+    &__log-out {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      cursor: pointer;
+      border: solid 1px;
+      border-radius: 5px;
+      padding: 15px 20px;
+      text-decoration: none;
+    }
+
+    &__create {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      cursor: pointer;
+      border: solid 1px;
+      border-radius: 5px;
+      padding: 5px 10px;
+      text-decoration: none;
+      color: #52c41a;
+      border-color: #52c41a;
+      margin-right: 20px;
+    }
+
+    &__sign-up {
+      color: #52c41a;
+      border-color: #52c41a;
+    }
+
+    &__log-out {
+      color: #000000bf;
+      border-color: #000000bf;
+      background-color: #ffffff;
+    }
+
+    &__create,
+    &__log-out,
+    &__sign-up,
+    &__sign-in {
+      transition: all 0.5s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    &__profile {
+      display: flex;
+      align-items: center;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      color: #000000d9;
+      vertical-align: middle;
+      text-decoration: none;
+      margin-right: 30px;
+
+      & > p {
+        margin-right: 10px;
+      }
+
+      & > img {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+      }
+    }
+  }
+}

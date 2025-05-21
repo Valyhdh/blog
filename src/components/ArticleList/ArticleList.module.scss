@@ -1,0 +1,12 @@
+.article-list {
+  &__loader {
+    margin: 50px auto 0 auto;
+    display: block;
+    scale: 2;
+  }
+
+  &__pagination {
+    justify-content: center;
+    margin-top: 50px;
+  }
+}

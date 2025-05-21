@@ -1,0 +1,164 @@
+.create-account {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 60px auto;
+  min-width: 360px;
+  max-width: 400px;
+  height: 630px;
+  box-sizing: border-box;
+  padding: 48px 32px 0 32px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  box-shadow: 0px 22px 106px 0px #00000012;
+
+  &__title {
+    margin: 0 0 30px 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+    width: 100%;
+    min-width: 260px;
+  }
+
+  &__input_invalid {
+    border: 1px solid #f5222d;
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.5s;
+
+    &_warning {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      color: #f5222d;
+      margin: 0;
+      margin-top: 5px;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.5s;
+
+    &:focus {
+      border-color: #1890ff;
+    }
+
+    &::placeholder {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      padding-left: 10px;
+    }
+
+    &:invalid {
+      border-color: #f5222d;
+    }
+
+    &:valid {
+      border-color: #d9d9d9;
+    }
+  }
+
+  &__label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #262626;
+  }
+
+  &__confirmation {
+    display: flex;
+    flex-direction: row-reverse;
+
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 20px;
+
+    & > input {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    & > label {
+      line-height: 20px;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #1890ff;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+
+    &_error {
+      background-color: #f5222d;
+    }
+
+    &:hover {
+      opacity: 0.7;
+      scale: 0.95;
+    }
+
+    &:active {
+      scale: 1.1;
+      opacity: 1;
+    }
+  }
+
+  &__error-message {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #f5222d;
+  }
+
+  &__to-sign-in {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    margin: 0;
+
+    &_link {
+      color: #1890ff;
+      text-decoration: none;
+      transition: all 0.5s;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+.outline {
+  width: 100%;
+  border: 1px solid #e8e8e8;
+  margin-bottom: 10px;
+}

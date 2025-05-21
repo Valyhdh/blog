@@ -1,0 +1,106 @@
+.article {
+  background-color: #ffffff;
+  margin: 25px auto 0 auto;
+  min-width: 360px;
+  max-width: 940px;
+  height: 140px;
+  box-sizing: border-box;
+  padding: 15px;
+  box-shadow: 0 4px 12px 0#00000026;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-height: 50px;
+    margin-bottom: 10px;
+
+    .info {
+      display: flex;
+      flex-direction: column;
+
+      &__name {
+        display: flex;
+        flex-direction: row;
+      }
+
+      &__title {
+        text-decoration: none;
+        margin: 0 5px 5px 0;
+        text-wrap: nowrap;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+        color: #1890ff;
+      }
+
+      &__favorites-count {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-height: 20px;
+        margin-top: 3px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        border: none;
+        color: #000000bf;
+        background-color: #ffffff;
+        cursor: pointer;
+
+        &::before {
+          content: url('../../assets/img/likeArticle.svg');
+          width: 16px;
+          height: 16px;
+          margin-right: 3px;
+          scale: 0.9;
+        }
+      }
+    }
+
+    .author {
+      display: flex;
+      flex-direction: row;
+      max-height: 46px;
+
+      .author-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+
+      .author-info {
+        margin: 5px 15px 0 0;
+
+        & > p {
+          margin: 0;
+        }
+
+        &__name {
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: 18px;
+          margin-top: 50px;
+        }
+
+        &__created {
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: 12px;
+          color: #00000080;
+        }
+      }
+    }
+  }
+
+  .content {
+    &__description {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 22px;
+      max-width: 75%;
+    }
+  }
+}
