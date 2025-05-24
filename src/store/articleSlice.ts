@@ -68,7 +68,45 @@ export const loginAccount = createAsyncThunk('account/loginAccount', async (body
     console.log(data.user);
     return data.user;
   } catch (error) {
-    console.error('Error create account:', error);
+    console.error('Error login account:', error);
+    throw error;
+  }
+});
+
+export const editAccount = createAsyncThunk('account/getAccount', async (date: EditUserType) => {
+  try {
+    const response = await fetch('https://blog-platform.kata.academy/api/user', {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${initialState.user?.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(date),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data.user);
+    return data.user;
+  } catch (error) {
+    console.error('Error get account:', error);
+    throw error;
+  }
+});
+
+export const CreateArticle = createAsyncThunk('articles/createArticle', async (date: CreateArticleType) => {
+  try {
+    const response = await fetch('https://blog-platform.kata.academy/api/articles', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${initialState.user?.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(date),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log(data);
+    return data.user;
+  } catch (error) {
+    console.error('Error get account:', error);
     throw error;
   }
 });
@@ -77,6 +115,15 @@ type LoginAccountType = {
   user: {
     email: string;
     password: string;
+  };
+};
+
+type CreateArticleType = {
+  article: {
+    title: string;
+    description: string;
+    body: string;
+    tags: string[];
   };
 };
 
@@ -92,6 +139,17 @@ export type UserType = {
   email: string;
   token: string;
   username: string;
+  bio: string;
+  image: string;
+};
+
+type EditUserType = {
+  user: {
+    email: string;
+    username: string;
+    bio: string;
+    image: string;
+  };
 };
 
 export type ArticleType = {
@@ -143,9 +201,6 @@ const articleSlice = createSlice({
       state.user = null;
       localStorage.removeItem('user');
     },
-    GetIsLocalStorgeUser: (state) => {
-      state.user = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -181,6 +236,7 @@ const articleSlice = createSlice({
         state.error = false;
         state.user = action.payload;
         localStorage.setItem('user', JSON.stringify(action.payload));
+        console.log(state.user);
       })
       .addCase(createAccount.rejected, (state) => {
         state.loading = false;
@@ -197,6 +253,33 @@ const articleSlice = createSlice({
         localStorage.setItem('user', JSON.stringify(action.payload));
       })
       .addCase(loginAccount.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(editAccount.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(editAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = false;
+        state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(action.payload));
+        console.log(state.user);
+      })
+      .addCase(editAccount.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(CreateArticle.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(CreateArticle.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(CreateArticle.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });

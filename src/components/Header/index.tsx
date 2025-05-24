@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import asdas from '../../assets/img/Rectangle 1.svg';
 import { AppDispatch, RootState } from '../../store';
 import { logoutUser, UserType } from '../../store/articleSlice';
 
@@ -10,8 +9,22 @@ import classes from './Header.module.scss';
 
 const Header: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.article);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  return <header className={classes['header']}>{user ? <Login user={user} /> : <Logout />}</header>;
+  console.log('render header');
+  useEffect(() => {
+    setIsLoaded(true);
+
+    return () => {
+      setIsLoaded(false);
+    };
+  }, []);
+
+  return (
+    <header className={!isLoaded ? classes['header'] : `${classes['header']} ${classes['header__loaded']}`}>
+      {user ? <Login user={user} /> : <Logout />}
+    </header>
+  );
 };
 
 const Logout: React.FC = () => {
@@ -45,12 +58,12 @@ const Login: React.FC<LoginProps> = ({ user }) => {
         Realworld Blog
       </Link>
       <section className={classes['header-authentication']}>
-        <Link to="/" className={classes['header-authentication__create']}>
+        <Link to="/new-article" className={classes['header-authentication__create']}>
           Create article
         </Link>
-        <Link to="/" className={classes['header-authentication__profile']}>
+        <Link to="/profile" className={classes['header-authentication__profile']}>
           <p>{user.username}</p>
-          <img src={asdas} alt="" />
+          <img src={user.image} alt="" />
         </Link>
         <button onClick={() => dispatch(logoutUser())} className={classes['header-authentication__log-out']}>
           Log Out

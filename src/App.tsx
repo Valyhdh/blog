@@ -8,6 +8,8 @@ import ArticleFull from './components/ArticleFull';
 import Header from './components/Header';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
+import EditProfile from './components/EditProfile';
+import NewArticle from './components/NewArticle';
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
         <Route path="/articles/:slug" Component={ArticleFull} />
         <Route path="/sign-up" Component={SignUp} />
         <Route path="/sign-in" Component={SignIn} />
+        <Route path="/profile" Component={EditProfile} />
+        <Route path="/new-article" Component={NewArticle} />
       </Routes>
     </React.Fragment>
   );

@@ -13,7 +13,7 @@ import classes from './ArticleFull.module.scss';
 
 const ArticleFull: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { article } = useSelector((state: RootState) => state.article, shallowEqual);
+  const { article, user } = useSelector((state: RootState) => state.article, shallowEqual);
   const { slug } = useParams<{ slug: string }>();
 
   useEffect(() => {
@@ -62,7 +62,16 @@ const ArticleFull: React.FC = () => {
         </section>
       </section>
       <section className={classes['content']}>
-        <p className={classes['content__description']}>{description}</p>
+        <div className={classes['content__wrapper']}>
+          <p className={classes['content__description']}>{description}</p>
+          {user?.username === username ? (
+            <div className={classes['buttons']}>
+              <button className={classes['button-del']}>Delete</button>
+              <button className={classes['button-edit']}>Edit</button>
+            </div>
+          ) : null}
+        </div>
+
         <div className={classes['content__body']}>
           <Markdown>{body}</Markdown>
         </div>

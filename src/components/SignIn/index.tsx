@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Spin } from 'antd';
@@ -14,6 +14,11 @@ const SignIn: React.FC = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,23 +33,21 @@ const SignIn: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes['login-account']}>
-      <h2 className={classes['login-account__title']}>
-        {loading ? <Spin className={classes['login-account__loader']} /> : 'Sign In'}
-      </h2>
-      <div className={classes['login-account__field']}>
-        <label className={classes['login-account__label']}>Email address</label>
+    <form onSubmit={handleSubmit} className={`form ${classes['login-account']} ${isLoaded ? 'form__loaded' : ''}`}>
+      <h2 className={'form__title'}>{loading ? <Spin className={'form__loader'} /> : 'Sign In'}</h2>
+      <div className={'form__field'}>
+        <label className={'form__label'}>Email address</label>
         <input
           type="email"
           placeholder="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className={classes['login-account__input']}
+          className={'form__input'}
         />
       </div>
-      <div className={classes['login-account__field']}>
-        <label className={classes['login-account__label']}>Password</label>
+      <div className={'form__field'}>
+        <label className={'form__label'}>Password</label>
         <input
           pattern="\w{6,40}"
           type="password"
@@ -52,29 +55,26 @@ const SignIn: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className={classes['login-account__input']}
+          className={'form__input'}
         />
       </div>
       {user ? (
-        <div className={classes['login-account__alert']}>You are already logged in</div>
+        <div className={'form__alert'}>You are already logged in</div>
       ) : error ? (
         <React.Fragment>
-          <button
-            type="submit"
-            className={`${classes['login-account__button']} ${classes['login-account__button_error']}`}
-          >
+          <button type="submit" className={`${['form__button']} ${['form__button_error']}`}>
             login
           </button>
-          <p className={classes['login-account__error-message']}>The password or login is not entered correctly.</p>
+          <p className={'form__error-message'}>The password or login is not entered correctly.</p>
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <button type="submit" className={classes['login-account__button']}>
+          <button type="submit" className={'form__button'}>
             login
           </button>
-          <p className={classes['login-account__to-sign-up']}>
+          <p className={'form__to-sign-up'}>
             Don’t have an account?{' '}
-            <Link to="/sign-up" className={classes['login-account__to-sign-up_link']}>
+            <Link to="/sign-up" className={'form__to-sign-up_link'}>
               Sign Up.
             </Link>
           </p>
