@@ -1,21 +1,48 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Spin } from 'antd';
+import { useParams } from 'react-router-dom';
 
 import { AppDispatch, RootState } from '../../store';
-import { CreateArticle } from '../../store/articleSlice';
+import { CreateArticle, editArticle, getArticle, resetArticle } from '../../store/articleSlice';
 
 import classes from './NewArticle.module.scss';
 
-const NewArticle: React.FC = () => {
+interface NewArticleProps {
+  onEdit: boolean;
+}
+
+const NewArticle: React.FC<NewArticleProps> = ({ onEdit }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, user } = useSelector((state: RootState) => state.article);
+  const { loading, user, article } = useSelector((state: RootState) => state.article, shallowEqual);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [text, setText] = useState('');
   const [tags, setTags] = useState(['']);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { slug } = useParams<{ slug: string }>();
+
+  useEffect(() => {
+    if (slug && onEdit) {
+      dispatch(getArticle(slug)).catch((error) => {
+        console.error('Error fetching article:', error);
+      });
+
+      return () => {
+        dispatch(resetArticle());
+      };
+    }
+  }, [dispatch, slug, onEdit]);
+
+  useEffect(() => {
+    if (article) {
+      setTitle(article.title);
+      setDescription(article.description);
+      setText(article.body);
+      setTags(article.tagList);
+    }
+  }, [article]);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -35,23 +62,41 @@ const NewArticle: React.FC = () => {
     const newInputs = tags.filter((_, i) => i !== index);
     setTags(newInputs);
   };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmitCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    const artilce = {
+    const artilceNew = {
       article: {
         title,
         description,
         body: text,
-        tags,
+        tagList: tags,
       },
     };
-    dispatch(CreateArticle(artilce));
+    dispatch(CreateArticle(artilceNew));
+  };
+
+  const handleSubmitEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const artilceNew = {
+      article: {
+        title,
+        description,
+        body: text,
+        tagList: tags,
+      },
+    };
+    if (slug) {
+      dispatch(editArticle({ article: artilceNew, slug }));
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`form ${classes['create-article']} ${isLoaded ? 'form__loaded' : ''}`}>
+    <form
+      onSubmit={onEdit ? handleSubmitEdit : handleSubmitCreate}
+      className={`form ${classes['create-article']} ${isLoaded ? 'form__loaded' : ''}`}
+    >
       <h2 className={`form__title ${classes['create-article__title']}`}>
-        {loading ? <Spin className={'form__loader'} /> : 'Create new article'}
+        {loading ? <Spin className={'form__loader'} /> : onEdit ? 'Edit article' : 'Create new article'}
       </h2>
       <div className={`form__field ${classes['create-article__field']}`}>
         <label className={'form__label'}>Title</label>
@@ -95,19 +140,18 @@ const NewArticle: React.FC = () => {
               <input
                 className={`form__input ${classes['create-article__input_tag']}`}
                 type="text"
+                required
                 value={input}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 placeholder={`Tag ${index + 1}`}
               />
-              {tags.length !== 1 ? (
-                <button
-                  type="button"
-                  onClick={() => deleteInput(index)}
-                  className={classes['create-article__button_tags-del']}
-                >
-                  Delete
-                </button>
-              ) : null}
+              <button
+                type="button"
+                onClick={() => deleteInput(index)}
+                className={classes['create-article__button_tags-del']}
+              >
+                Delete
+              </button>
             </div>
           ))}
         </div>

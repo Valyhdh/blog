@@ -18,11 +18,12 @@ export default function App() {
       <Routes>
         <Route path="/" Component={ArticleList} />
         <Route path="/articles" Component={ArticleList} />
-        <Route path="/articles/:slug" Component={ArticleFull} />
+        <Route path="/articles/:slug/" Component={ArticleFull} />
         <Route path="/sign-up" Component={SignUp} />
         <Route path="/sign-in" Component={SignIn} />
         <Route path="/profile" Component={EditProfile} />
-        <Route path="/new-article" Component={NewArticle} />
+        <Route path="/new-article" element={<NewArticle onEdit={false} />} />
+        <Route path="/articles/:slug/edit" element={<NewArticle onEdit={true} />} />
       </Routes>
     </React.Fragment>
   );

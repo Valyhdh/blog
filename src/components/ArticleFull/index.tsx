@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { format, parseISO } from 'date-fns';
 import Markdown from 'react-markdown';
 
-import { getArticle, resetArticle } from '../../store/articleSlice';
+import { deleteArticle, getArticle, resetArticle } from '../../store/articleSlice';
 import { AppDispatch, RootState } from '../../store';
 import { Loader } from '../ArticleList';
 import { ArticleTags } from '../Article';
@@ -16,6 +16,8 @@ const ArticleFull: React.FC = () => {
   const { article, user } = useSelector((state: RootState) => state.article, shallowEqual);
   const { slug } = useParams<{ slug: string }>();
 
+  const [onDelete, setOnDelete] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   useEffect(() => {
     if (slug) {
       dispatch(getArticle(slug));
@@ -28,6 +30,9 @@ const ArticleFull: React.FC = () => {
 
   if (!article) {
     return <Loader />;
+  }
+  if (deleted) {
+    return <article className={classes['article']}>Delete</article>;
   }
 
   const {
@@ -66,8 +71,41 @@ const ArticleFull: React.FC = () => {
           <p className={classes['content__description']}>{description}</p>
           {user?.username === username ? (
             <div className={classes['buttons']}>
-              <button className={classes['button-del']}>Delete</button>
-              <button className={classes['button-edit']}>Edit</button>
+              <button
+                className={classes['button-del']}
+                onClick={() => {
+                  setOnDelete(!onDelete);
+                }}
+              >
+                Delete
+              </button>
+              <Link to="edit" className={classes['button-edit']}>
+                Edit
+              </Link>
+              {onDelete ? (
+                <div className={classes['modal-delete']}>
+                  <p className={classes['modal-delete__title']}>Are you sure to delete this article?</p>
+                  <div className={classes['modal-delete__confirm']}>
+                    <button
+                      className={classes['modal-delete__confirm_no']}
+                      onClick={() => {
+                        setOnDelete(false);
+                      }}
+                    >
+                      No
+                    </button>
+                    <button
+                      className={classes['modal-delete__confirm_yes']}
+                      onClick={() => {
+                        dispatch(deleteArticle(slug!));
+                        setDeleted(true);
+                      }}
+                    >
+                      Yes
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>

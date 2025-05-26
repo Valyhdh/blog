@@ -103,6 +103,46 @@ export const CreateArticle = createAsyncThunk('articles/createArticle', async (d
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error('Error get account:', error);
+    throw error;
+  }
+});
+
+export const editArticle = createAsyncThunk(
+  'articles/editArticle',
+  async ({ article, slug }: { article: CreateArticleType; slug: string }) => {
+    console.log(JSON.stringify(article));
+    try {
+      const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${initialState.user?.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(article),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error get account:', error);
+      throw error;
+    }
+  }
+);
+
+export const deleteArticle = createAsyncThunk('articles/deleteArticle', async (slug: string) => {
+  try {
+    const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${initialState.user?.token}` },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
     console.log(data);
     return data.user;
   } catch (error) {
@@ -123,7 +163,7 @@ type CreateArticleType = {
     title: string;
     description: string;
     body: string;
-    tags: string[];
+    tagList: string[];
   };
 };
 
@@ -280,6 +320,30 @@ const articleSlice = createSlice({
         state.error = false;
       })
       .addCase(CreateArticle.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(editArticle.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(editArticle.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(editArticle.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(deleteArticle.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(deleteArticle.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(deleteArticle.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });
