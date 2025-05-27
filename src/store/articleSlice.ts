@@ -106,7 +106,7 @@ export const CreateArticle = createAsyncThunk('articles/createArticle', async (d
 
     return data;
   } catch (error) {
-    console.error('Error get account:', error);
+    console.error('Error create article:', error);
     throw error;
   }
 });
@@ -127,7 +127,7 @@ export const editArticle = createAsyncThunk(
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error get account:', error);
+      console.error('Error edit article:', error);
       throw error;
     }
   }
@@ -146,7 +146,41 @@ export const deleteArticle = createAsyncThunk('articles/deleteArticle', async (s
     console.log(data);
     return data.user;
   } catch (error) {
-    console.error('Error get account:', error);
+    console.error('Error delete article:', error);
+    throw error;
+  }
+});
+
+export const favoriteArticle = createAsyncThunk('articles/favoriteArticle', async (slug: string) => {
+  try {
+    const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${initialState.user?.token}` },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error favorite article:', error);
+    throw error;
+  }
+});
+
+export const unfavoriteArticle = createAsyncThunk('articles/unfavoriteArticle', async (slug: string) => {
+  try {
+    const response = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${initialState.user?.token}` },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error unfavorite article:', error);
     throw error;
   }
 });
@@ -344,6 +378,30 @@ const articleSlice = createSlice({
         state.error = false;
       })
       .addCase(deleteArticle.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(favoriteArticle.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(favoriteArticle.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(favoriteArticle.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(unfavoriteArticle.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(unfavoriteArticle.fulfilled, (state) => {
+        state.loading = false;
+        state.error = false;
+      })
+      .addCase(unfavoriteArticle.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });

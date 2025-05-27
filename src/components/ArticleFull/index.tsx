@@ -4,7 +4,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { format, parseISO } from 'date-fns';
 import Markdown from 'react-markdown';
 
-import { deleteArticle, getArticle, resetArticle } from '../../store/articleSlice';
+import { deleteArticle, favoriteArticle, getArticle, resetArticle, unfavoriteArticle } from '../../store/articleSlice';
 import { AppDispatch, RootState } from '../../store';
 import { Loader } from '../ArticleList';
 import { ArticleTags } from '../Article';
@@ -15,9 +15,9 @@ const ArticleFull: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { article, user } = useSelector((state: RootState) => state.article, shallowEqual);
   const { slug } = useParams<{ slug: string }>();
-
   const [onDelete, setOnDelete] = useState(false);
   const [deleted, setDeleted] = useState(false);
+
   useEffect(() => {
     if (slug) {
       dispatch(getArticle(slug));
@@ -43,8 +43,23 @@ const ArticleFull: React.FC = () => {
     author: { image, username },
     createdAt,
     favoritesCount,
+    favorited,
     tagList,
   } = article;
+
+  const handleFavorite = () => {
+    if (!favorited) {
+      dispatch(favoriteArticle(slugArticle));
+      setTimeout(() => {
+        dispatch(getArticle(slug));
+      }, 300);
+    } else {
+      dispatch(unfavoriteArticle(slugArticle));
+      setTimeout(() => {
+        dispatch(getArticle(slug));
+      }, 300);
+    }
+  };
 
   return (
     <article className={classes['article']}>
@@ -52,7 +67,9 @@ const ArticleFull: React.FC = () => {
         <section className={classes['info']}>
           <div className={classes['info__name']}>
             <h2 className={classes['info__title']}>{title}</h2>
-            <button className={classes['info__favorites-count']}>{favoritesCount}</button>
+            <button className={classes['info__favorites-count']} onClick={handleFavorite}>
+              {favoritesCount}
+            </button>
           </div>
           <div className={classes['info__tags']}>
             {tagList ? <ArticleTags tags={tagList} slug={slugArticle} /> : null}
@@ -97,7 +114,7 @@ const ArticleFull: React.FC = () => {
                     <button
                       className={classes['modal-delete__confirm_yes']}
                       onClick={() => {
-                        dispatch(deleteArticle(slug!));
+                        dispatch(deleteArticle(slugArticle));
                         setDeleted(true);
                       }}
                     >

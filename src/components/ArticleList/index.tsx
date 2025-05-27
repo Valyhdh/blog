@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Dispatch, SetStateAction } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Spin, Pagination } from 'antd';
 import type { PaginationProps } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -12,15 +12,19 @@ import classes from './ArticleList.module.scss';
 const ArticleList: React.FC = () => {
   const [page, setPage] = useState(1);
   const dispatch: AppDispatch = useDispatch();
-  const { loading, error } = useSelector((state: RootState) => state.article);
+  const { loading } = useSelector((state: RootState) => state.article, shallowEqual);
 
   useEffect(() => {
     dispatch(getArticles((page - 1) * 5));
   }, [dispatch, page]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <article className={classes['article-list']}>
-      {loading ? <Loader /> : <List setPage={setPage} page={page} />}
+      <List setPage={setPage} page={page} />
     </article>
   );
 };
@@ -44,7 +48,7 @@ const List: React.FC<ListProps> = ({ setPage, page }) => {
   return (
     <React.Fragment>
       {articles.map((art) => {
-        return <Article key={art.slug} art={art} />;
+        return <Article key={art.slug} art={art} page={page} />;
       })}
       <Pagination
         current={page}
